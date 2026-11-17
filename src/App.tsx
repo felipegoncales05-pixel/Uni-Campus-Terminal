@@ -215,6 +215,27 @@ function App() {
   useEffect(() => { try { localStorage.setItem('campus-lessons-v1', JSON.stringify(completed)); } catch { /* storage blocked */ } }, [completed]);
   useEffect(() => { try { localStorage.setItem('campus-answers-v1', JSON.stringify(answers)); } catch { /* storage blocked */ } }, [answers]);
 
+  // A gaveta de matérias é exclusiva do celular. Evita scroll por trás do menu,
+  // responde à tecla Escape e fecha ao retornar para a largura de desktop.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    const onResize = () => {
+      if (window.innerWidth > 980) setMenuOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    window.addEventListener('resize', onResize);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [menuOpen]);
+
   function navigate(destination: View) {
     setView(destination);
     setMenuOpen(false);
@@ -271,7 +292,7 @@ function App() {
 
   return <div className="app-shell">
     {menuOpen && <button className="mobile-scrim" aria-label="Fechar menu" onClick={() => setMenuOpen(false)} />}
-    <aside className={'sidebar ' + (menuOpen ? 'open' : '')}>
+    <aside id="campus-sidebar" className={'sidebar ' + (menuOpen ? 'open' : '')} aria-label="Menu principal">
       <button className="brand" onClick={() => navigate('dashboard')} aria-label="Ir ao painel inicial">
         <span className="brand-icon"><GraduationCap size={25} /></span>
         <span><strong>UNI<span className="brand-purple">CAMPUS</span></strong><small>TERMINAL ACADÊMICO</small></span>
@@ -303,7 +324,7 @@ function App() {
 
     <div className="main-area">
       <header className="topbar">
-        <button className="icon-button mobile-menu" aria-label="Abrir menu" onClick={() => setMenuOpen(true)}><Menu size={21} /></button>
+        <button className="icon-button mobile-menu" aria-label="Abrir menu de matérias" aria-controls="campus-sidebar" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)}><Menu size={21} /></button>
         <div className="breadcrumb"><span>CAMPUS</span><ChevronRight size={15} /><strong>{pageTitle}</strong></div>
         <div className="topbar-right"><span className="online-indicator" /><span>AMBIENTE DE ESTUDOS</span><button className="top-action" onClick={() => navigate('dashboard')} aria-label="Ir ao painel"><GraduationCap size={20} /></button></div>
       </header>
@@ -326,7 +347,7 @@ function App() {
             <div className="stat-card"><span className="stat-icon green"><Trophy size={20} /></span><span className="stat-number">{correctCount}</span><span className="stat-label">Respostas corretas</span></div>
           </section>
           <div className="section-heading"><div><div className="eyebrow muted">EXPLORE SEU CONHECIMENTO</div><h2>Suas matérias</h2><p>Escolha uma área para continuar sua jornada.</p></div><span className="count-pill">{tracks.length} trilhas</span></div>
-          <div className="subjects-grid">{tracks.map(subjectCard)}</div>
+          <div className="subjects-grid" id="subjects">{tracks.map(subjectCard)}</div>
           <section className="action-banner"><span className="action-banner-icon"><Code2 size={33} /></span><div><h3>Pronto para colocar a mão no código?</h3><p>Escreva, analise e salve seus programas C++ no laboratório.</p></div><button className="btn-primary" onClick={() => navigate('lab')}>Abrir laboratório <ArrowRight size={16} /></button></section>
         </>}
 
@@ -382,6 +403,23 @@ function App() {
         {view==='lab' && <CodeLab />}
       </main>
       <footer className="footer"><span>© Campus Terminal · ambiente de estudos</span><span>Aprender • Praticar • Evoluir</span></footer>
+      <nav className="mobile-bottom-nav" aria-label="Navegação rápida do celular">
+        <button className={view === 'dashboard' ? 'active' : ''} aria-current={view === 'dashboard' ? 'page' : undefined} onClick={() => navigate('dashboard')}>
+          <LayoutDashboard size={21} aria-hidden="true" /><span>Início</span>
+        </button>
+        <button className={activeTrack ? 'active' : ''} aria-expanded={menuOpen} aria-controls="campus-sidebar" onClick={() => setMenuOpen(true)}>
+          <BookOpen size={21} aria-hidden="true" /><span>Matérias</span>
+        </button>
+        <button className={view === 'quiz' ? 'active' : ''} aria-current={view === 'quiz' ? 'page' : undefined} onClick={() => startQuiz('all')}>
+          <ClipboardList size={21} aria-hidden="true" /><span>Questões</span>
+        </button>
+        <button className={view === 'lab' ? 'active' : ''} aria-current={view === 'lab' ? 'page' : undefined} onClick={() => navigate('lab')}>
+          <Code2 size={21} aria-hidden="true" /><span>C++</span>
+        </button>
+        <button className={view === 'library' ? 'active' : ''} aria-current={view === 'library' ? 'page' : undefined} onClick={() => navigate('library')}>
+          <Library size={21} aria-hidden="true" /><span>Biblioteca</span>
+        </button>
+      </nav>
     </div>
     <button aria-label="Fechar menu" className={'mobile-close ' + (menuOpen?'visible':'')} onClick={()=>setMenuOpen(false)}><X size={22}/></button>
   </div>;

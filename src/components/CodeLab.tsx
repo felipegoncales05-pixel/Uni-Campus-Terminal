@@ -98,12 +98,23 @@ export default function CodeLab() {
   const [status, setStatus] = useState('Editor pronto');
   const [analysisVisible, setAnalysisVisible] = useState(false);
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [touchEditor, setTouchEditor] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 720px)').matches
+  );
   const monacoRef = useRef<Parameters<OnMount>[1] | null>(null);
   const issues = useMemo(() => inspect(code), [code]);
   const [compilerIssues, setCompilerIssues] = useState<Issue[]>([]);
   const allIssues = useMemo(() => [...compilerIssues, ...issues], [compilerIssues, issues]);
 
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, code); } catch { /* storage unavailable */ } }, [code]);
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 720px)');
+    const sync = () => setTouchEditor(media.matches);
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
   useEffect(() => {
     const editor = editorRef.current;
     const monaco = monacoRef.current;
@@ -239,6 +250,13 @@ export default function CodeLab() {
   }
 
   function navigateIssue(line: number) {
+    if (touchEditor && textAreaRef.current) {
+      const rows = code.split('\n');
+      const offset = rows.slice(0, Math.max(0, line - 1)).reduce((sum, row) => sum + row.length + 1, 0);
+      textAreaRef.current.focus();
+      textAreaRef.current.setSelectionRange(offset, offset);
+      return;
+    }
     editorRef.current?.revealLineInCenter(line);
     editorRef.current?.setPosition({ lineNumber: line, column: 1 });
     editorRef.current?.focus();
@@ -263,11 +281,20 @@ export default function CodeLab() {
 
     <div className="lab-editor-grid">
       <div className="lab-card">
-        <div className="lab-card-heading"><span className="file-tab"><Code2 size={16}/> main.cpp</span><span>C++ · Monaco</span></div>
+        <div className="lab-card-heading"><span className="file-tab"><Code2 size={16}/> main.cpp</span><span>{touchEditor ? 'Editor para celular' : 'C++ · Monaco'}</span></div>
         <div className="lab-editor">
-          <Editor height="420px" language="cpp" theme="vs-dark" value={code} onMount={onMount} onChange={value => { setCode(value || ''); setCompilerIssues([]); }}
-            options={{ fontSize: 13, minimap: { enabled: false }, automaticLayout: true, tabSize: 4, lineNumbers: 'on', scrollBeyondLastLine: false, wordWrap: 'on' }}
-            loading={<div className="lab-card-body">Carregando editor de código...</div>}/>
+          {touchEditor ? (
+            <label className="touch-editor-label">
+              <span className="sr-only">Código C++ editável</span>
+              <textarea ref={textAreaRef} className="mobile-code-editor" aria-label="Código C++" value={code}
+                onChange={e => { setCode(e.target.value); setCompilerIssues([]); }}
+                autoCapitalize="off" autoCorrect="off" spellCheck={false} wrap="soft" />
+            </label>
+          ) : (
+            <Editor height="420px" language="cpp" theme="vs-dark" value={code} onMount={onMount} onChange={value => { setCode(value || ''); setCompilerIssues([]); }}
+              options={{ fontSize: 13, minimap: { enabled: false }, automaticLayout: true, tabSize: 4, lineNumbers: 'on', scrollBeyondLastLine: false, wordWrap: 'on' }}
+              loading={<div className="lab-card-body">Carregando editor de código...</div>} />
+          )}
         </div>
         <div className="lab-card-footer">
           <button className="btn-outline" onClick={() => exportFile('cpp')}><Download size={16}/> Baixar .cpp</button>
@@ -291,6 +318,7 @@ export default function CodeLab() {
           </button>)}
           {!analysisVisible && <p className="lab-note">Clique em Analisar para ver sugestões. Os marcadores são heurísticos e podem falhar; o compilador fornece o diagnóstico definitivo de sintaxe.</p>}
           <p className="lab-note warn">O console aceita entradas preparadas antes da execução; interação contínua em tempo real não está disponível nesta versão.</p>
+          {touchEditor && <p className="lab-note">No celular, o editor usa uma área de texto otimizada para toque e teclado virtual. O destaque de sintaxe fica disponível no computador; os diagnósticos e downloads funcionam nas duas versões.</p>}
         </div>
       </div>
     </div>

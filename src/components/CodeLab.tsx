@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Editor, { type OnMount } from '@monaco-editor/react';
-import { AlertTriangle, CheckCircle2, Code2, Download, FileJson2, Play, RotateCcw, SearchCode, ShieldCheck, Terminal } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Code2, Download, FileJson2, Play, RotateCcw, SearchCode, ShieldCheck, Terminal, Wrench } from 'lucide-react';
 
 type Issue = { line: number; severity: 'warning' | 'error'; message: string };
 type ExecuteResponse = {
@@ -65,6 +65,19 @@ function inspect(source: string): Issue[] {
   return issues.slice(0, 25);
 }
 
+function compilerDiagnostics(output: string): Issue[] {
+  const entries: Issue[] = [];
+  for (const line of output.split('\n')) {
+    const match = line.match(/(?:^|[\\/])[^:\n]*?\.cpp:(\d+):(?:(\d+):)?\s*(warning|error):\s*(.+)/i);
+    if (match) entries.push({
+      line: Number(match[1]),
+      severity: match[3].toLowerCase() === 'error' ? 'error' : 'warning',
+      message: match[4].trim() + ' (diagnóstico do compilador)',
+    });
+  }
+  return entries.slice(0, 30);
+}
+
 function download(filename: string, contents: string, mime: string) {
   const blob = new Blob([contents], { type: mime });
   const url = URL.createObjectURL(blob);
@@ -87,6 +100,8 @@ export default function CodeLab() {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const monacoRef = useRef<Parameters<OnMount>[1] | null>(null);
   const issues = useMemo(() => inspect(code), [code]);
+  const [compilerIssues, setCompilerIssues] = useState<Issue[]>([]);
+  const allIssues = useMemo(() => [...compilerIssues, ...issues], [compilerIssues, issues]);
 
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, code); } catch { /* storage unavailable */ } }, [code]);
   useEffect(() => {
@@ -94,7 +109,7 @@ export default function CodeLab() {
     const monaco = monacoRef.current;
     const model = editor?.getModel();
     if (!monaco || !model) return;
-    monaco.editor.setModelMarkers(model, 'campus-hints', issues.map(item => ({
+    monaco.editor.setModelMarkers(model, 'campus-hints', allIssues.map(item => ({
       startLineNumber: item.line,
       endLineNumber: item.line,
       startColumn: 1,
@@ -102,13 +117,13 @@ export default function CodeLab() {
       message: item.message + ' (verificação local, não compilador)',
       severity: item.severity === 'error' ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
     })));
-  }, [issues]);
+  }, [allIssues]);
 
   const onMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
     const model = editor.getModel();
-    if (model) monaco.editor.setModelMarkers(model, 'campus-hints', issues.map(item => ({
+    if (model) monaco.editor.setModelMarkers(model, 'campus-hints', allIssues.map(item => ({
       startLineNumber: item.line, endLineNumber: item.line, startColumn: 1,
       endColumn: Math.max(2, model.getLineMaxColumn(Math.min(item.line, model.getLineCount()))),
       message: item.message, severity: monaco.MarkerSeverity.Warning,
@@ -118,6 +133,7 @@ export default function CodeLab() {
   function loadSample(index: number) {
     if (index < 0 || !SAMPLES[index]) return;
     setExample(index);
+    setCompilerIssues([]);
     setCode(SAMPLES[index].code);
     setOutput('Exemplo carregado. Execute para obter a saída real ou use a análise local para receber dicas.');
     setOutputType('normal');
@@ -125,11 +141,39 @@ export default function CodeLab() {
 
   function analyze() {
     setAnalysisVisible(true);
-    setStatus(issues.length ? issues.length + ' sugestão(ões) locais' : 'Nenhum padrão conhecido sinalizado');
+    setStatus(allIssues.length ? allIssues.length + ' apontamento(s)' : 'Nenhum padrão conhecido sinalizado');
+  }
+
+  function applySimpleFixes() {
+    let changes = 0;
+    const lines = code.split('\n').map((line, index) => {
+      const warnings = issues.filter(item => item.line === index + 1);
+      let next = line;
+      if (warnings.some(item => item.message.includes('ponto e vírgula')) &&
+          !next.trim().includes('//') && !next.trim().endsWith(';')) {
+        next += ';';
+        changes++;
+      }
+      if (warnings.some(item => item.message.includes('std::cout')) &&
+          /\bcout\b/.test(next) && !/\bstd::cout\b/.test(next)) {
+        next = next.replace(/\bcout\b/, 'std::cout');
+        changes++;
+      }
+      return next;
+    });
+    if (changes) {
+      setCode(lines.join('\n'));
+      setCompilerIssues([]);
+      setAnalysisVisible(true);
+      setStatus(changes + ' correção(ões) simples aplicada(s). Revise e compile.');
+    } else {
+      setStatus('Nenhuma correção simples segura disponível');
+    }
   }
 
   async function run() {
     setOutputType('normal');
+    setCompilerIssues([]);
     if (!apiUrl) {
       setOutput('O editor funciona, mas a compilação remota ainda não está configurada.\n\nDefina VITE_COMPILER_API_URL na compilação do site e hospede o Worker/serviço Judge0. Não simulamos a execução de código.');
       setStatus('Compilador não configurado');
@@ -156,6 +200,8 @@ export default function CodeLab() {
       const description = typeof result.status === 'string' ? result.status : (result.status?.description || 'Concluído');
       setOutput(blocks.join('\n\n') || 'O programa terminou sem produzir saída textual.\nEstado: ' + description);
       setOutputType(result.compile_output || result.stderr ? 'error' : 'normal');
+      setCompilerIssues(compilerDiagnostics(result.compile_output || ''));
+      setAnalysisVisible(true);
       setStatus(description);
     } catch (error) {
       setOutput('Não foi possível executar o programa.\n' + (error instanceof Error ? error.message : String(error)) + '\n\nConfira o endereço, os limites e a disponibilidade do executor.');
@@ -211,6 +257,7 @@ export default function CodeLab() {
       </select>
       <span className="spacer"/>
       <button className="btn-outline" onClick={analyze}><SearchCode size={16}/> Analisar</button>
+      <button className="btn-outline" onClick={applySimpleFixes} disabled={issues.length === 0}><Wrench size={16}/> Corrigir básico</button>
       <button className="btn-primary" disabled={busy} onClick={run}><Play size={16}/>{busy ? 'Executando...' : 'Executar C++'}</button>
     </div>
 
@@ -218,7 +265,7 @@ export default function CodeLab() {
       <div className="lab-card">
         <div className="lab-card-heading"><span className="file-tab"><Code2 size={16}/> main.cpp</span><span>C++ · Monaco</span></div>
         <div className="lab-editor">
-          <Editor height="420px" language="cpp" theme="vs-dark" value={code} onMount={onMount} onChange={value => setCode(value || '')}
+          <Editor height="420px" language="cpp" theme="vs-dark" value={code} onMount={onMount} onChange={value => { setCode(value || ''); setCompilerIssues([]); }}
             options={{ fontSize: 13, minimap: { enabled: false }, automaticLayout: true, tabSize: 4, lineNumbers: 'on', scrollBeyondLastLine: false, wordWrap: 'on' }}
             loading={<div className="lab-card-body">Carregando editor de código...</div>}/>
         </div>
@@ -237,9 +284,9 @@ export default function CodeLab() {
           <div className="lab-divider"/>
           <pre className={'lab-output '+(outputType === 'error' ? 'error' : '')} aria-live="polite">{output}</pre>
           <div className="lab-divider"/>
-          <div className="lab-card-heading" style={{margin:'0 -16px 12px',background:'transparent'}}><span>ANÁLISE LOCAL</span><span>{issues.length} aviso(s)</span></div>
-          {analysisVisible && issues.length === 0 && <p className="lab-note">Nenhum padrão conhecido foi sinalizado. Isso não equivale a compilar nem garante que o código está correto.</p>}
-          {analysisVisible && issues.map((item,i) => <button className={'lab-diagnostic '+(item.severity==='error'?'error':'')} key={item.line+'-'+i} onClick={()=>navigateIssue(item.line)}>
+          <div className="lab-card-heading" style={{margin:'0 -16px 12px',background:'transparent'}}><span>ANÁLISE LOCAL</span><span>{allIssues.length} aviso(s)</span></div>
+          {analysisVisible && allIssues.length === 0 && <p className="lab-note">Nenhum padrão conhecido foi sinalizado. Isso não equivale a compilar nem garante que o código está correto.</p>}
+          {analysisVisible && allIssues.map((item,i) => <button className={'lab-diagnostic '+(item.severity==='error'?'error':'')} key={item.line+'-'+i} onClick={()=>navigateIssue(item.line)}>
             <AlertTriangle size={16}/><span><strong>Linha {item.line}</strong><br/>{item.message}</span>
           </button>)}
           {!analysisVisible && <p className="lab-note">Clique em Analisar para ver sugestões. Os marcadores são heurísticos e podem falhar; o compilador fornece o diagnóstico definitivo de sintaxe.</p>}

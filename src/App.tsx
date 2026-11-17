@@ -46,6 +46,160 @@ function TrackIcon({ track, size = 22 }: { track: Track; size?: number }) {
   return <Icon size={size} strokeWidth={1.8} />;
 }
 
+// Atalhos para outras pastas que já existem no acervo conectado do Drive.
+const complementCatalog = [
+  {
+    "title": "Java — apostilas e programação",
+    "url": "https://drive.google.com/drive/folders/1PeF8FmWJqSPPywfkGcVELFn9ObWrBUEi",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "TypeScript",
+    "url": "https://drive.google.com/drive/folders/1OUjyla2pUJTYmwg6u3ZqpZIiXVqhsxYo",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "PHP",
+    "url": "https://drive.google.com/drive/folders/1n1RdsIq0uvBb1A6pAiYoX4Kp2rZLD--c",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "XML",
+    "url": "https://drive.google.com/drive/folders/1kYXp_12WFPinD6V0fpGcPNuVi7CbMj8d",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Programação Web — acervo geral",
+    "url": "https://drive.google.com/drive/folders/1qHtkvwy5LxZ6LC23k2TMi8EisLr1C_Ux",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Python — acervo completo",
+    "url": "https://drive.google.com/drive/folders/16zIOQr85sm-PNKqVZ0CuoowEthzlxjsy",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "SQL — exercícios e apostilas",
+    "url": "https://drive.google.com/drive/folders/1XHb82Q-38DrmTdwJ78KNhskP2ReZ7b_Y",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Engenharia de Software",
+    "url": "https://drive.google.com/drive/folders/1hOaqrJBzHFQ9m9Pu8fKj-MZed1Ru0hON",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Requisitos de Software",
+    "url": "https://drive.google.com/drive/folders/1-9NuLhYc8CXMQfBMDdlmT61u0QqdDxjx",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Gestão de Projetos",
+    "url": "https://drive.google.com/drive/folders/1tNFDNd8wsInapLaKI6IfdIH7UQxqUCro",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Desenvolvimento de Jogos e Gamificação",
+    "url": "https://drive.google.com/drive/folders/15fKa2TDS_lzx9xJLuuiliHpEdwWizhIa",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Animação e Design",
+    "url": "https://drive.google.com/drive/folders/1A4zof52CMgP-RlA-8ICGbmpa0j62M3Q7",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Modelagem 3D",
+    "url": "https://drive.google.com/drive/folders/15dGCtu3OuZeq873yU_2IQF4oQ3QDZhCW",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Android Studio",
+    "url": "https://drive.google.com/drive/folders/1iXK__M52_sgkPBiYftFm7jhhgRYTEUTD",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "IoT — Internet das Coisas",
+    "url": "https://drive.google.com/drive/folders/1SHO_bQjLz2w8jVHnP-9M0VNitabmKrZg",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Hardware",
+    "url": "https://drive.google.com/drive/folders/16GczPU5kbxdISOmYMkf-rJFJ3feXjAK8",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Matemática Aplicada",
+    "url": "https://drive.google.com/drive/folders/1IQ3T9HVZTPp4qB-2qFCn62s1hgEbyDkW",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Estatística — materiais",
+    "url": "https://drive.google.com/drive/folders/1AzfvAMZbRuQfuWU7f3_Y1mtRtgPBF4LS",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Ciência de Dados",
+    "url": "https://drive.google.com/drive/folders/1qOe_mVWND5tTYoygShsTAvMXdY2NQ7Ln",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Excel",
+    "url": "https://drive.google.com/drive/folders/1SPVsoLJMEN8_nN25OLIOkeOot08DMHAR",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Power Automate",
+    "url": "https://drive.google.com/drive/folders/1hTsHw-VeQFN_N_-_9F0h91Ws8WNRJkKp",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Linguagem R",
+    "url": "https://drive.google.com/drive/folders/1k-Feph2opAG4bSGr4mc-zRVGVo-bwCyn",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "IA Generativa e Machine Learning",
+    "url": "https://drive.google.com/drive/folders/1OECTtAFOQoImPSiOqk_oyIXT2qasmnNa",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Tecnologias na Educação",
+    "url": "https://drive.google.com/drive/folders/1FbvLXV6_G5xpGf559eYPRL4_kulNM7b6",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Marketing Digital",
+    "url": "https://drive.google.com/drive/folders/15wQ7zxG6Ci_ZLPpXvU3c6nie9Or-iVHz",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Comunicação",
+    "url": "https://drive.google.com/drive/folders/1qj7cx8NYwKJ44Kj9BJOBDzq9LK0ShAjm",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Libras",
+    "url": "https://drive.google.com/drive/folders/1EWmyjn7h50mUtRXDdnBNCzemVznQrSet",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Idiomas",
+    "url": "https://drive.google.com/drive/folders/1595DStBgoaOEweOMOgRr3Dc0KCKEDT-m",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Psicologia",
+    "url": "https://drive.google.com/drive/folders/1F7YWavI0OHHx-Izboxj1V4tVpNPfQiLZ",
+    "trackName": "Acervo complementar"
+  },
+  {
+    "title": "Biblioteca geral de cursos",
+    "url": "https://drive.google.com/drive/folders/1JmRyC5RXwB0WeIyNLwCcZw9l9PBKpbNY",
+    "trackName": "Acervo complementar"
+  }
+];
+
 function App() {
   const [view, setView] = useState<View>('dashboard');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -85,9 +239,9 @@ function App() {
   const quizQuestions = quizFilter === 'all' ? questions : questions.filter(item => item.trackId === quizFilter);
   const currentQuestion = quizQuestions[Math.min(quizIndex, quizQuestions.length - 1)];
   const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
-  const allSources = tracks.flatMap(track => track.sources
+  const allSources = [...tracks.flatMap(track => track.sources
     .filter(source => source.url.startsWith('https://'))
-    .map(source => ({ ...source, trackName: track.title })));
+    .map(source => ({ ...source, trackName: track.title }))), ...complementCatalog];
   const shownSources = allSources.filter(source => (source.title + source.trackName).toLowerCase().includes(sourceFilter.toLowerCase()));
 
   function toggleLesson(id: string) {

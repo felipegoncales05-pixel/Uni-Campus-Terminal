@@ -1,0 +1,11 @@
+name = "uni-campus-cpp"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://felipegoncales05-pixel.github.io"
+JUDGE0_BASE_URL = ""
+JUDGE0_LANGUAGE_ID = "54"
+
+# JUDGE0_AUTH_TOKEN deve ser fornecido como secret se necessário.
+# ID 54 corresponde tipicamente a C++17; consulte /languages no Judge0 usado.

@@ -9,9 +9,11 @@ import {
 import { tracks } from './data/tracks';
 import { questions } from './data/questions';
 import CodeLab from './components/CodeLab';
+import UnicidTutorsHub from './components/UnicidTutorsHub';
+import { unicidTutors } from './data/unicidTutors';
 import type { Track } from './types';
 
-type View = 'dashboard' | 'library' | 'quiz' | 'lab' | string;
+type View = 'dashboard' | 'library' | 'quiz' | 'lab' | 'tutors' | string;
 type Tab = 'learn' | 'examples' | 'practice' | 'questions' | 'references';
 
 const icons: Record<string, LucideIcon> = {
@@ -288,7 +290,7 @@ function App() {
     </button>;
   }
 
-  const pageTitle = activeTrack?.title ?? ({ dashboard: 'Visão geral', quiz: 'Central de questões', lab: 'Laboratório C++', library: 'Biblioteca acadêmica' }[view] || 'Campus Terminal');
+  const pageTitle = activeTrack?.title ?? ({ dashboard: 'Visão geral', quiz: 'Central de questões', lab: 'Laboratório C++', library: 'Biblioteca acadêmica', tutors: 'Tutores UNICID' }[view] || 'Campus Terminal');
 
   return <div className="app-shell">
     {menuOpen && <button className="mobile-scrim" aria-label="Fechar menu" onClick={() => setMenuOpen(false)} />}
@@ -303,6 +305,7 @@ function App() {
         <button className={'nav-row ' + (view === 'quiz' ? 'active' : '')} onClick={() => startQuiz('all')}><ClipboardList size={18} /> Simulado geral <span className="nav-tag">60</span></button>
         <button className={'nav-row ' + (view === 'lab' ? 'active' : '')} onClick={() => navigate('lab')}><Code2 size={18} /> Laboratório C++</button>
         <button className={'nav-row ' + (view === 'library' ? 'active' : '')} onClick={() => navigate('library')}><Library size={18} /> Biblioteca</button>
+        <button className={'nav-row ' + (view === 'tutors' ? 'active' : '')} onClick={() => navigate('tutors')}><GraduationCap size={18} /> Tutores UNICID <span className="nav-tag">5</span></button>
         <div className="sidebar-section-label subjects-label">MATÉRIAS <span>{tracks.length}</span></div>
         <label className="sidebar-search"><Search size={16} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar matéria..." aria-label="Buscar matéria" /></label>
         <div className="sidebar-subjects">
@@ -348,6 +351,11 @@ function App() {
           </section>
           <div className="section-heading"><div><div className="eyebrow muted">EXPLORE SEU CONHECIMENTO</div><h2>Suas matérias</h2><p>Escolha uma área para continuar sua jornada.</p></div><span className="count-pill">{tracks.length} trilhas</span></div>
           <div className="subjects-grid" id="subjects">{tracks.map(subjectCard)}</div>
+          <section className="unicid-home-banner">
+            <div className="unicid-home-symbol"><GraduationCap size={29}/></div>
+            <div><span className="eyebrow muted">NOVO · APOIO ACADÊMICO</span><h3>Conheça os tutores UNICID</h3><p>Cinco disciplinas, ementas e materiais oficiais, roteiro de estudo guiado e calculadora de notas.</p></div>
+            <button className="btn-primary" onClick={() => navigate('tutors')}>Explorar tutores <ArrowRight size={16}/></button>
+          </section>
           <section className="action-banner"><span className="action-banner-icon"><Code2 size={33} /></span><div><h3>Pronto para colocar a mão no código?</h3><p>Escreva, analise e salve seus programas C++ no laboratório.</p></div><button className="btn-primary" onClick={() => navigate('lab')}>Abrir laboratório <ArrowRight size={16} /></button></section>
         </>}
 
@@ -381,7 +389,9 @@ function App() {
             {tab==='examples' && <section className="module-panel"><div className="section-heading compact"><div><h2>Exemplos explicados</h2><p>Uma aplicação prática para cada conteúdo estudado.</p></div></div><div className="examples-grid">{track.lessons.map((item,i)=><div className="example-card" key={item.title}><span className="eyebrow muted">EXEMPLO {String(i+1).padStart(2,'0')}</span><h3>{item.title}</h3><pre>{item.example}</pre></div>)}</div></section>}
             {tab==='practice' && <section className="module-panel"><h2>Pratique o que aprendeu</h2><p className="panel-intro">Escolha um conceito, altere o exemplo e compare o comportamento. A prática ajuda a identificar dúvidas antes da avaliação.</p><div className="practice-card"><span className="practice-icon"><Play size={26}/></span><div><h3>{track.id==='cpp'?'Laboratório C++':'Desafio de revisão'}</h3><p>{track.id==='cpp'?'Abra o editor, analise os avisos e execute o código quando o serviço de compilação estiver configurado.':'Selecione um exemplo da aba anterior, mude uma entrada e explique o resultado. Em seguida, teste seu entendimento nas questões.'}</p></div><button className="btn-primary" onClick={()=>track.id==='cpp'?navigate('lab'):startQuiz(track.id)}>{track.id==='cpp'?'Abrir editor':'Fazer exercícios'} <ArrowRight size={16}/></button></div></section>}
             {tab==='questions' && <section className="module-panel"><h2>Questões de {track.title}</h2><p className="panel-intro">Cinco perguntas de múltipla escolha, com correção e explicação após responder.</p><div className="practice-card"><span className="practice-icon"><ClipboardList size={26}/></span><div><h3>Simulado da matéria</h3><p>Acompanhe acertos, revise os conteúdos e refaça o simulado quando desejar.</p></div><button className="btn-primary" onClick={()=>startQuiz(track.id)}>Iniciar 5 questões <ArrowRight size={16}/></button></div></section>}
-            {tab==='references' && <section className="module-panel"><h2>Materiais e referências</h2><p className="panel-intro">Links para os materiais originais do Drive, sem cópias integrais publicadas neste repositório. As explicações do site são textos próprios, organizados a partir das referências.</p>{track.sources.map(source=>source.url.startsWith('https://')?<a className="resource-row" href={source.url} target="_blank" rel="noopener noreferrer" key={source.title}><BookOpen size={20}/><span>{source.title}</span><ExternalLink size={17}/></a>:<div className="resource-row static-resource" key={source.title}><BookOpen size={20}/><span>{source.title} (conteúdo desenvolvido para este site)</span></div>)}</section>}
+            {tab==='references' && <section className="module-panel"><h2>Materiais e referências</h2><p className="panel-intro">Links para os materiais originais do Drive, sem cópias integrais publicadas neste repositório. As explicações do site são textos próprios, organizados a partir das referências.</p>{track.sources.map(source=>source.url.startsWith('https://')?<a className="resource-row" href={source.url} target="_blank" rel="noopener noreferrer" key={source.title}><BookOpen size={20}/><span>{source.title}</span><ExternalLink size={17}/></a>:<div className="resource-row static-resource" key={source.title}><BookOpen size={20}/><span>{source.title} (conteúdo desenvolvido para este site)</span></div>)}
+            {unicidTutors.some(item=>item.relatedTrackIds.includes(track.id))&&<div className="unicid-track-references"><h3>Aprofundamento UNICID</h3><p>Trilhas relacionadas aos tutores acadêmicos do Prof. Cid R. Andrade. Consulte o índice e as fontes originais para revisar o tema.</p>{unicidTutors.filter(item=>item.relatedTrackIds.includes(track.id)).map(item=><div key={item.id} className="unicid-track-item"><span>{item.title}</span><button className="btn-outline" onClick={()=>navigate('tutors')}>Abrir roteiro <ArrowRight size={14}/></button><a href={item.official.index} target="_blank" rel="noopener noreferrer">Índice <ExternalLink size={13}/></a></div>)}</div>}
+          </section>}
           </>;
         })()}
 
@@ -401,6 +411,7 @@ function App() {
         </section>}
 
         {view==='lab' && <CodeLab />}
+        {view==='tutors' && <UnicidTutorsHub />}
       </main>
       <footer className="footer"><span>© Campus Terminal · ambiente de estudos</span><span>Aprender • Praticar • Evoluir</span></footer>
       <nav className="mobile-bottom-nav" aria-label="Navegação rápida do celular">
@@ -416,8 +427,8 @@ function App() {
         <button className={view === 'lab' ? 'active' : ''} aria-current={view === 'lab' ? 'page' : undefined} onClick={() => navigate('lab')}>
           <Code2 size={21} aria-hidden="true" /><span>C++</span>
         </button>
-        <button className={view === 'library' ? 'active' : ''} aria-current={view === 'library' ? 'page' : undefined} onClick={() => navigate('library')}>
-          <Library size={21} aria-hidden="true" /><span>Biblioteca</span>
+        <button className={view === 'tutors' || view === 'library' ? 'active' : ''} aria-current={view === 'tutors' || view === 'library' ? 'page' : undefined} onClick={() => navigate('tutors')}>
+          <GraduationCap size={21} aria-hidden="true" /><span>Tutores</span>
         </button>
       </nav>
     </div>

@@ -12,6 +12,14 @@ Cada trilha começa com cinco aulas, exemplos e referências. Há 60 questões d
 
 O laboratório C++ permite escrever e organizar programas, ver sugestões locais de erros comuns, preparar entradas para o console, exportar arquivos .cpp e exportar/importar projetos JSON. A compilação real é opcional e utiliza um serviço isolado, conforme a documentação técnica.
 
+## Tutores IA UNICID — repertório acadêmico complementar
+
+A área **Tutores UNICID** reúne cinco disciplinas a partir do repertório público do Prof. Cid R. Andrade: Modelagem de Banco de Dados, Desenvolvimento Front-End para Web, Estruturas de Dados II, Paradigmas de Linguagens de Programação e Design Profissional.
+
+O painel oferece 20 módulos de revisão temática, perguntas que estimulam o raciocínio, anotações locais, marcação de revisão, acesso às ementas e aos índices do professor e uma calculadora didática de A1/A2/AF voltada à regra específica dessas disciplinas.
+
+**Importante:** esse painel não é um tutor de IA conversacional. Os tutores reais estão disponíveis no repositório original: https://github.com/cidandrade/tutores-ia-unicid . O conteúdo acadêmico original possui licença CC BY-NC-SA 4.0. Há atribuição, indicação de adaptações e condições de uso em [docs/TUTORES_UNICID.md](docs/TUTORES_UNICID.md). Não há vínculo oficial ou endosso pela UNICID ou pelo professor.
+
 ## Rodando localmente
 
 Tenha Node.js 22 instalado. Clone o repositório, execute npm install e depois npm run dev. Abra o endereço informado pelo Vite.

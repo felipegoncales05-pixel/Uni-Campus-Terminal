@@ -226,3 +226,114 @@ body { max-width:100%; overflow-x:clip; }
 @supports not (height:100dvh) {
   @media(max-width:980px){ .sidebar{ height:100vh; max-height:100vh; } }
 }
+
+
+/* Complemento acadêmico dos Tutores IA UNICID — interface original do Campus Terminal. */
+.unicid-hub{min-width:0}
+.unicid-intro{display:flex;justify-content:space-between;align-items:center;gap:20px;margin:10px 0 20px}
+.unicid-intro>div{min-width:0;max-width:760px}
+.unicid-intro h1{font-size:clamp(27px,3.3vw,39px);letter-spacing:-1px;margin:0 0 11px}
+.unicid-intro p{font-size:13px;line-height:1.75;color:#9ca9bf;margin:0}
+.unicid-intro>a{flex:none;white-space:nowrap}
+.unicid-disclosure{border:1px solid #38436b;background:#1c2139;padding:15px 17px;border-radius:12px;display:flex;align-items:start;gap:11px;font-size:12px;line-height:1.7;color:#b6c2dc;margin-bottom:22px}
+.unicid-disclosure svg{color:#b9a1fc;flex:none;margin-top:2px}
+.unicid-disclosure strong{color:#ddd2ff}
+.unicid-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:19px}
+.unicid-card{background:#141c2c;border:1px solid #2e3851;color:#e6eaf5;text-align:left;border-radius:13px;padding:14px;display:flex;flex-direction:column;align-items:start;gap:7px;min-height:146px;transition:border .15s,transform .15s}
+.unicid-card:hover{border-color:var(--unicid-accent);transform:translateY(-2px)}
+.unicid-card.selected{background:color-mix(in srgb,var(--unicid-accent) 9%,#151d2d);border-color:color-mix(in srgb,var(--unicid-accent) 66%,#323a50)}
+.unicid-card-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:11px;color:var(--unicid-accent);background:color-mix(in srgb,var(--unicid-accent) 17%,transparent);margin-bottom:4px}
+.unicid-card strong{font-size:12px;line-height:1.45}
+.unicid-card small{font-size:10px;color:#8695ae;margin-top:auto}
+.unicid-active,.unicid-grade{border:1px solid #2d3950;background:#141c2c;border-radius:16px;padding:clamp(19px,3vw,28px);margin:20px 0}
+.unicid-title-row{display:flex;align-items:center;gap:17px;padding-bottom:21px;border-bottom:1px solid #2c374c}
+.unicid-title-icon{display:grid;place-items:center;width:65px;height:65px;border-radius:17px;color:var(--unicid-accent);background:color-mix(in srgb,var(--unicid-accent) 15%,transparent);flex:none}
+.unicid-title-row>div:nth-child(2){flex:1;min-width:0}
+.unicid-title-row h2{font-size:clamp(20px,2.6vw,27px);letter-spacing:-.7px;margin:8px 0}
+.unicid-title-row p{font-size:12px;line-height:1.6;color:#9daabd;margin:0}
+.unicid-progress{text-align:right;min-width:115px}
+.unicid-progress strong{font-size:27px;color:var(--unicid-accent);display:block}
+.unicid-progress span{font-size:10px;color:#93a0b6}
+.unicid-links{display:flex;flex-wrap:wrap;gap:9px;padding:18px 0 23px}
+.unicid-links a{border:1px solid #3a4560;background:#1a2537;color:#c5cfdf;border-radius:9px;display:inline-flex;align-items:center;gap:7px;padding:10px 11px;font-size:11px;font-weight:700;min-height:39px}
+.unicid-links a:hover{border-color:#a28ce7;color:#fff}
+.unicid-links a svg:first-child{color:#c0a6ff}
+.unicid-study-grid{display:grid;grid-template-columns:235px minmax(0,1fr);gap:15px}
+.unicid-module-list,.unicid-study-panel{border:1px solid #344054;background:#101828;border-radius:12px;min-width:0}
+.unicid-module-list{align-self:start;padding:12px}
+.unicid-module-button{width:100%;min-height:51px;display:flex;gap:10px;align-items:start;text-align:left;background:transparent;border:0;border-radius:8px;padding:12px 9px;color:#a4b2c7;font-size:12px;line-height:1.5;font-weight:700}
+.unicid-module-button:hover{background:#1c2940;color:#f4f4fc}
+.unicid-module-button.current{color:#e8d9ff;background:#2b2542}
+.unicid-module-button svg{flex:none;color:#61d6a6;margin-top:1px}
+.unicid-module-num{color:#aa94df;min-width:18px;font-size:11px}
+.unicid-study-panel{padding:clamp(18px,3vw,26px)}
+.unicid-study-panel h3{font-size:clamp(20px,2vw,25px);letter-spacing:-.5px;margin:12px 0}
+.unicid-study-panel>p{font-size:13px;line-height:1.8;color:#adb8cc;margin:0 0 21px}
+.unicid-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:5px;background:#0b1322;border-radius:9px;margin-bottom:15px}
+.unicid-stages button{border:0;background:transparent;color:#a1acc1;border-radius:7px;padding:10px 7px;font-size:11px;font-weight:800;min-height:38px}
+.unicid-stages button.active{background:#433466;color:#e4d8ff}
+.unicid-prompt{min-height:160px;border:1px solid #3d4b64;background:#192438;border-radius:11px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.unicid-prompt span{font-size:10px;letter-spacing:1px;color:#b8a0ef;font-weight:900}
+.unicid-prompt strong{font-size:15px;line-height:1.5}
+.unicid-prompt p{font-size:12px;color:#aebbd1;line-height:1.7;margin:0}
+.unicid-note-label{display:block;margin:20px 0 9px;color:#c9d3e5;font-size:12px;font-weight:800}
+.unicid-notes{width:100%;max-width:100%;min-width:0;background:#0d1625;border:1px solid #3a4560;border-radius:10px;color:#e5edfa;padding:13px;font-size:13px;line-height:1.6;resize:vertical}
+.unicid-panel-actions{display:flex;gap:9px;flex-wrap:wrap;margin:15px 0 0}
+.unicid-panel-actions .btn-outline,.unicid-panel-actions .btn-check{min-height:41px;font-size:11px}
+.unicid-feedback{font-size:12px;margin:12px 0 0;color:#c8b3ff;line-height:1.6}
+.unicid-grade-head{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.unicid-grade-head h2{font-size:24px;margin:8px 0}
+.unicid-grade-head p{font-size:13px;color:#a1adc2;line-height:1.7;margin:0}
+.unicid-grade-head>svg{color:#bba2fa;flex:none}
+.unicid-grade-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:24px 0 18px}
+.unicid-grade-fields label{display:grid;gap:8px;font-size:11px;color:#bbc7dc;font-weight:800}
+.unicid-grade-fields input{width:100%;min-width:0;background:#0d1726;border:1px solid #384760;border-radius:9px;color:#f2f3fa;padding:12px;font-size:14px}
+.unicid-grade-result{padding:17px 18px;background:#1b2b41;border:1px solid #3a526e;border-radius:11px;display:grid;gap:7px}
+.unicid-grade-result.success{background:#183529;border-color:#367357}
+.unicid-grade-result.warning{background:#382a24;border-color:#775944}
+.unicid-grade-result strong{font-size:14px;color:#e7ebf5}
+.unicid-grade-result span{font-size:13px;line-height:1.7;color:#b5c2d4}
+.unicid-grade-bottom{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:15px}
+.unicid-grade-bottom p{font-size:11px;line-height:1.7;color:#8d9bb2;margin:0}
+.unicid-grade-bottom button{flex:none}
+.unicid-credits{color:#8897af;font-size:11px;line-height:1.85;max-width:105ch}
+.unicid-credits a{color:#c2a7ff;text-decoration:underline}
+.unicid-home-banner{display:flex;align-items:center;gap:20px;border:1px solid #453b68;border-radius:16px;padding:23px;margin-top:28px;background:linear-gradient(110deg,#1f1c39,#161e31)}
+.unicid-home-banner>div:nth-child(2){flex:1}
+.unicid-home-symbol{width:58px;height:58px;display:grid;place-items:center;color:#c4adff;background:#3a315d;border-radius:15px;flex:none}
+.unicid-home-banner h3{font-size:18px;margin:7px 0 5px}
+.unicid-home-banner p{font-size:12px;color:#9eaac3;line-height:1.6;margin:0}
+.unicid-home-banner .btn-primary{flex:none;white-space:nowrap}
+.unicid-track-references{background:#1b2536;border:1px solid #3b4560;border-radius:10px;padding:19px;margin-top:23px}
+.unicid-track-references h3{font-size:16px;margin:0 0 8px}
+.unicid-track-references>p{color:#a5b0c3;font-size:12px;line-height:1.7}
+.unicid-track-item{display:flex;gap:10px;align-items:center;border-top:1px solid #344259;padding:12px 0;font-size:12px}
+.unicid-track-item span{flex:1}
+.unicid-track-item .btn-outline{font-size:11px;min-height:35px;padding:8px 10px}
+.unicid-track-item a{color:#c4aaf9;font-size:11px;display:inline-flex;align-items:center;gap:5px}
+@media(max-width:1150px){.unicid-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.unicid-grade-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:850px){.unicid-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.unicid-study-grid{grid-template-columns:1fr}.unicid-module-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.unicid-module-list .lesson-list-title{grid-column:1/-1}.unicid-home-banner{flex-wrap:wrap}.unicid-home-banner .btn-primary{margin-left:0}.unicid-intro{flex-wrap:wrap}}
+@media(max-width:580px){
+ .unicid-intro>a{width:100%}
+ .unicid-cards{gap:8px}
+ .unicid-card{min-height:137px;padding:11px}
+ .unicid-card strong{font-size:11px}
+ .unicid-title-row{flex-wrap:wrap}
+ .unicid-title-icon{width:51px;height:51px}
+ .unicid-title-row>div:nth-child(2){flex-basis:calc(100% - 70px)}
+ .unicid-progress{min-width:0;width:100%;display:flex;gap:10px;align-items:center;text-align:left}
+ .unicid-progress strong{font-size:20px}
+ .unicid-module-list{grid-template-columns:1fr}
+ .unicid-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .unicid-links a{min-width:0;flex-wrap:wrap;font-size:10px;padding:8px;overflow-wrap:anywhere}
+ .unicid-stages{gap:3px}
+ .unicid-stages button{font-size:10px;min-height:43px}
+ .unicid-panel-actions{display:grid}
+ .unicid-panel-actions button{width:100%;min-height:45px}
+ .unicid-grade-fields{gap:10px}
+ .unicid-grade-bottom{flex-wrap:wrap}
+ .unicid-home-banner{padding:18px;gap:12px}
+ .unicid-home-banner .btn-primary{width:100%}
+ .unicid-track-item{flex-wrap:wrap}
+ .unicid-track-item span{flex-basis:100%}
+}

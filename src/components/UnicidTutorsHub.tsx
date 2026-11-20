@@ -4,7 +4,7 @@ import {
   Copy, Database, Download, ExternalLink, GraduationCap, Link2, RotateCcw,
   Sparkles, type LucideIcon,
 } from 'lucide-react';
-import { unicidTutors, type UnicidTutor } from '../data/unicidTutors';
+import { unicidTutors } from '../data/unicidTutors';
 
 const icons: Record<string, LucideIcon> = {
   mbd: Database,

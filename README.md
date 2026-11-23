@@ -20,6 +20,12 @@ O painel oferece 20 módulos de revisão temática, perguntas que estimulam o ra
 
 **Importante:** esse painel não é um tutor de IA conversacional. Os tutores reais estão disponíveis no repositório original: https://github.com/cidandrade/tutores-ia-unicid . O conteúdo acadêmico original possui licença CC BY-NC-SA 4.0. Há atribuição, indicação de adaptações e condições de uso em [docs/TUTORES_UNICID.md](docs/TUTORES_UNICID.md). Não há vínculo oficial ou endosso pela UNICID ou pelo professor.
 
+## Design Profissional — aprofundamento por apostila
+
+A disciplina ganhou um **curso de revisão próprio**, acessível pelo menu lateral, pelo dashboard ou por Tutores UNICID → Design Profissional. O conteúdo foi organizado a partir dos PDFs do Drive da turma de 2026.2, em quatro unidades (identidade profissional; planejamento de carreira; ética e direitos digitais; sustentabilidade e impacto social), com **12 aulas ampliadas, 16 questões de revisão e dois simulados autorais de 12 questões**. Exemplos comentados, tarefas abertas, anotações e links para os documentos originais acompanham cada aula.
+
+Os 40 exercícios novos são separados das 60 questões gerais. Os simulados não reproduzem a A1 ou a AF, e seus resultados são apenas para estudo. Veja os detalhes e fontes em [docs/DESIGN_PROFISSIONAL.md](docs/DESIGN_PROFISSIONAL.md).
+
 ## Rodando localmente
 
 Tenha Node.js 22 instalado. Clone o repositório, execute npm install e depois npm run dev. Abra o endereço informado pelo Vite.

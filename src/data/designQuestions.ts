@@ -490,7 +490,7 @@ export const designQuestions: DesignQuestion[] = [
       "800"
     ],
     "answer": 1,
-    "explanation": "PUE = 1200 / 800 = 1,5."
+    "explanation": "Divida a energia total de 1.200 kWh pelos 800 kWh usados em TI: PUE = 1,5. Não confunda com emissões de carbono."
   },
   {
     "id": "dp-social-6",

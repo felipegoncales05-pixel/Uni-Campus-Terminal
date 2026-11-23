@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import {
-  ArrowRight, BookOpen, BookMarked, Check, CheckCircle2, ChevronLeft, ChevronRight,
+  ArrowRight, BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight,
   ClipboardCheck, ExternalLink, FileText, GraduationCap, Layers3, RotateCcw, ShieldCheck
 } from 'lucide-react';
 import { designUnits, designSources } from '../data/designCourse';

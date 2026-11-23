@@ -10,10 +10,11 @@ import { tracks } from './data/tracks';
 import { questions } from './data/questions';
 import CodeLab from './components/CodeLab';
 import UnicidTutorsHub from './components/UnicidTutorsHub';
+import DesignCourse from './components/DesignCourse';
 import { unicidTutors } from './data/unicidTutors';
 import type { Track } from './types';
 
-type View = 'dashboard' | 'library' | 'quiz' | 'lab' | 'tutors' | string;
+type View = 'dashboard' | 'library' | 'quiz' | 'lab' | 'tutors' | 'design' | string;
 type Tab = 'learn' | 'examples' | 'practice' | 'questions' | 'references';
 
 const icons: Record<string, LucideIcon> = {
@@ -290,7 +291,7 @@ function App() {
     </button>;
   }
 
-  const pageTitle = activeTrack?.title ?? ({ dashboard: 'Visão geral', quiz: 'Central de questões', lab: 'Laboratório C++', library: 'Biblioteca acadêmica', tutors: 'Tutores UNICID' }[view] || 'Campus Terminal');
+  const pageTitle = activeTrack?.title ?? ({ dashboard: 'Visão geral', quiz: 'Central de questões', lab: 'Laboratório C++', library: 'Biblioteca acadêmica', tutors: 'Tutores UNICID', design: 'Design Profissional' }[view] || 'Campus Terminal');
 
   return <div className="app-shell">
     {menuOpen && <button className="mobile-scrim" aria-label="Fechar menu" onClick={() => setMenuOpen(false)} />}
@@ -306,6 +307,7 @@ function App() {
         <button className={'nav-row ' + (view === 'lab' ? 'active' : '')} onClick={() => navigate('lab')}><Code2 size={18} /> Laboratório C++</button>
         <button className={'nav-row ' + (view === 'library' ? 'active' : '')} onClick={() => navigate('library')}><Library size={18} /> Biblioteca</button>
         <button className={'nav-row ' + (view === 'tutors' ? 'active' : '')} onClick={() => navigate('tutors')}><GraduationCap size={18} /> Tutores UNICID <span className="nav-tag">5</span></button>
+        <button className={'nav-row ' + (view === 'design' ? 'active' : '')} onClick={() => navigate('design')}><BookMarked size={18} /> Design Profissional <span className="nav-tag">40</span></button>
         <div className="sidebar-section-label subjects-label">MATÉRIAS <span>{tracks.length}</span></div>
         <label className="sidebar-search"><Search size={16} /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar matéria..." aria-label="Buscar matéria" /></label>
         <div className="sidebar-subjects">
@@ -354,7 +356,7 @@ function App() {
           <section className="unicid-home-banner">
             <div className="unicid-home-symbol"><GraduationCap size={29}/></div>
             <div><span className="eyebrow muted">NOVO · APOIO ACADÊMICO</span><h3>Conheça os tutores UNICID</h3><p>Cinco disciplinas, ementas e materiais oficiais, roteiro de estudo guiado e calculadora de notas.</p></div>
-            <button className="btn-primary" onClick={() => navigate('tutors')}>Explorar tutores <ArrowRight size={16}/></button>
+            <button className="btn-primary" onClick={() => navigate('design')}>Estudar Design Profissional <ArrowRight size={16}/></button>
           </section>
           <section className="action-banner"><span className="action-banner-icon"><Code2 size={33} /></span><div><h3>Pronto para colocar a mão no código?</h3><p>Escreva, analise e salve seus programas C++ no laboratório.</p></div><button className="btn-primary" onClick={() => navigate('lab')}>Abrir laboratório <ArrowRight size={16} /></button></section>
         </>}
@@ -411,7 +413,8 @@ function App() {
         </section>}
 
         {view==='lab' && <CodeLab />}
-        {view==='tutors' && <UnicidTutorsHub />}
+        {view==='tutors' && <UnicidTutorsHub onOpenDesignCourse={() => navigate('design')} />}
+        {view==='design' && <DesignCourse />}
       </main>
       <footer className="footer"><span>© Campus Terminal · ambiente de estudos</span><span>Aprender • Praticar • Evoluir</span></footer>
       <nav className="mobile-bottom-nav" aria-label="Navegação rápida do celular">

@@ -56,7 +56,7 @@ function gradeText(a1Text: string, a2Text: string, afText: string, frequencyText
   return { title: updated >= 6 ? 'Soma recuperada pela AF' : 'Soma ainda abaixo de 6,0', details: 'Após substituir a menor nota: ' + largest.toFixed(1) + ' + ' + af.toFixed(1) + ' = ' + updated.toFixed(1) + '.' + (frequency === null ? ' Confirme também a frequência mínima de 75%.' : ''), state: updated >= 6 ? 'success' : 'warning' };
 }
 
-export default function UnicidTutorsHub() {
+export default function UnicidTutorsHub({ onOpenDesignCourse }: { onOpenDesignCourse: () => void }) {
   const [active, setActive] = useState('mbd');
   const [moduleIndex, setModuleIndex] = useState(0);
   const [stage, setStage] = useState(0);
@@ -136,6 +136,11 @@ export default function UnicidTutorsHub() {
         <a href={tutor.official.skill} target="_blank" rel="noopener noreferrer"><GraduationCap size={16}/> Tutor original <ExternalLink size={13}/></a>
         <a href={tutor.official.download} target="_blank" rel="noopener noreferrer"><Download size={16}/> Skill oficial (.zip)</a>
       </div>
+
+      {tutor.id==='dp'&&<div className="dp-unicid-cta">
+        <div><strong>Curso aprofundado de Design Profissional</strong><p>12 aulas, 16 questões de revisão e dois simulados autorais de 12 perguntas, com referências às apostilas do Drive.</p></div>
+        <button className="btn-primary" onClick={onOpenDesignCourse}>Abrir curso <ArrowRight size={16}/></button>
+      </div>}
 
       <div className="unicid-study-grid">
         <aside className="unicid-module-list" aria-label="Unidades desta disciplina">
